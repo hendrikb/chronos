@@ -9,6 +9,11 @@ clearStatsWarning = """Warning:
     be recoverable. If you really want to do this, run this
     command again."""
 
+inactivityWarning = """It looks like you may have been inactive for %s.
+    I took the liberty of not adding this timespan to your stats to refrain
+    from skewing them. If you want me to add this anyway, run :ChronosAddAnyway.
+    """
+
 def getExtension(fileName):
     splits = fileName.rsplit(".", 1)
     if len(splits) < 2:
@@ -27,8 +32,9 @@ class ChronosState:
 
 class Chronos:
     def __init__(self):
-        self.timerDict = {}
-        self.confirmClear = False
+        self.timerDict     = {}
+        self.confirmClear  = False
+        self.savedTimespan = None
         try:
             with open(".chronos", "r") as file:
                 self.state = pickle.load(file)
@@ -84,8 +90,11 @@ class Chronos:
         del self.timerDict[curBuf]
 
         elapsed = curTime - startTime
-
-        self.addToStats(curExt, elapsed)
+        if elapsed.total_seconds() >= 30:
+            sys.stderr.write(inactivityWarning)
+            self.savedTimespan = (elapsed, elapsed)
+        else:
+            self.addToStats(curExt, elapsed)
 
     def addToStats(self, ext, elapsed):
         for when in ["today", "total", "week", "month"]:
@@ -93,6 +102,12 @@ class Chronos:
                 self.state.statsDict[when][ext] += elapsed
             else:
                 self.state.statsDict[when][ext] = elapsed
+
+    def addSaved(self):
+        if self.savedTimespan:
+            self.addToStats(self.savedTimespan[1], self.savedTimespan[0])
+            print "Added %s to stats for %s" % self.savedTimespan
+            self.savedTimespan = None
 
     def printStatsFor(self, key):
         curBuf = vim.current.buffer

@@ -21,6 +21,10 @@ function! ClearStats()
     py chronos.clearStats()
 endfunction
 
+function! AddSaved()
+    py chronos.addSaved()
+endfunction
+
 augroup Chronos
     autocmd!
     autocmd Chronos BufEnter,FocusGained * silent! call StartTimer()
@@ -29,3 +33,4 @@ augroup END
 
 command! ChronosShowStats call ShowStats()
 command! ChronosClearStats call ClearStats()
+command! ChronosAddAnyway call AddSaved()

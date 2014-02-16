@@ -27,8 +27,8 @@ endfunction
 
 augroup Chronos
     autocmd!
-    autocmd Chronos BufEnter,FocusGained * silent! call StartTimer()
-    autocmd Chronos BufLeave,FocusLost * silent! call StopTimer()
+    autocmd Chronos BufEnter,FocusGained * call StartTimer()
+    autocmd Chronos BufLeave,FocusLost * call StopTimer()
 augroup END
 
 command! ChronosShowStats call ShowStats()

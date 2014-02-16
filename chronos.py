@@ -18,6 +18,24 @@ def getExtension(fileName):
     else:
         return splits[1]
 
+def formatTimeDelta(delta):
+    secs = delta.total_seconds()
+    result = ""
+
+    suffixes = [ ("y", 24 * 60 * 60 * 365)
+               , ("m", 24 * 60 * 60 * 30)
+               , ("w", 24 * 60 * 60 * 7)
+               , ("d", 24 * 60 * 60)
+               , ("h", 60 * 60)
+               , ("m", 60)
+               , ("s", 1)]
+    for (s, t) in suffixes:
+        q = int(secs) / t
+        if q > 0:
+            result += "%d%s " % (q, s)
+        secs = secs % t
+    return result.rstrip()
+
 class ChronosState:
     def __init__(self):
         self.month = date.today().month
@@ -114,7 +132,7 @@ class Chronos:
         curBuf = vim.current.buffer
         for (ext, time) in self.state.statsDict[key].iteritems():
             curBuf.append("  %s" % ext)
-            curBuf.append("    %s" % time)
+            curBuf.append("    %s" % formatTimeDelta(time))
 
     def clearStats(self):
         if self.confirmClear:

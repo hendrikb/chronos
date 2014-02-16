@@ -1,7 +1,13 @@
 import vim
+import sys
 from datetime import *
 import os
 import pickle
+
+clearStatsWarning = """Warning:
+    If you do this, your stats will be forgoten and will not
+    be recoverable. If you really want to do this, run this
+    command again."""
 
 def getExtension(fileName):
     splits = fileName.rsplit(".", 1)
@@ -22,11 +28,11 @@ class ChronosState:
 class Chronos:
     def __init__(self):
         self.timerDict = {}
+        self.confirmClear = False
         try:
             with open(".chronos", "r") as file:
                 self.state = pickle.load(file)
         except:
-            print "New state"
             self.state = ChronosState()
         if self.state.month != date.today().month:
             self.state.statsDict["month"].clear()
@@ -73,6 +79,7 @@ class Chronos:
         curTime = datetime.now()
         if curBuf not in self.timerDict:
             return
+
         startTime = self.timerDict[curBuf]
         del self.timerDict[curBuf]
 
@@ -81,7 +88,6 @@ class Chronos:
         self.addToStats(curExt, elapsed)
 
     def addToStats(self, ext, elapsed):
-
         for when in ["today", "total", "week", "month"]:
             if ext in self.state.statsDict[when]:
                 self.state.statsDict[when][ext] += elapsed
@@ -93,5 +99,13 @@ class Chronos:
         for (ext, time) in self.state.statsDict[key].iteritems():
             curBuf.append("  %s" % ext)
             curBuf.append("    %s" % time)
+
+    def clearStats(self):
+        if self.confirmClear:
+            self.state = ChronosState()
+            print "All your stats are belong to the void."
+        else:
+            sys.stderr.write(clearStatsWarning)
+            self.confirmClear = True
 
 chronos = Chronos()

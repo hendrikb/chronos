@@ -13,8 +13,12 @@ function! StopTimer()
     py chronos.stopTimer()
 endfunction
 
-function! PrintStats()
+function! ShowStats()
     py chronos.showStats()
+endfunction
+
+function! ClearStats()
+    py chronos.clearStats()
 endfunction
 
 augroup Chronos
@@ -22,3 +26,6 @@ augroup Chronos
     autocmd Chronos BufEnter,FocusGained * silent! call StartTimer()
     autocmd Chronos BufLeave,FocusLost * silent! call StopTimer()
 augroup END
+
+command! ChronosShowStats call ShowStats()
+command! ChronosClearStats call ClearStats()

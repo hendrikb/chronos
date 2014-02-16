@@ -47,6 +47,7 @@ class Chronos:
             pickle.dump(self.state, file)
 
     def showStats(self):
+        # TODO: Set buffer type so it doesn't need saving.
         vim.command("vnew")
         curBuf = vim.current.buffer
         del curBuf[:]
@@ -90,9 +91,9 @@ class Chronos:
         del self.timerDict[curBuf]
 
         elapsed = curTime - startTime
-        if elapsed.total_seconds() >= 30:
-            sys.stderr.write(inactivityWarning)
-            self.savedTimespan = (elapsed, elapsed)
+        # TODO: Add configurable threshold.
+        if elapsed.total_seconds() >= 10 * 60:
+            self.savedTimespan = (elapsed, curExt)
         else:
             self.addToStats(curExt, elapsed)
 
@@ -117,7 +118,8 @@ class Chronos:
 
     def clearStats(self):
         if self.confirmClear:
-            self.state = ChronosState()
+            self.state        = ChronosState()
+            self.confirmClear = False
             print "All your stats are belong to the void."
         else:
             sys.stderr.write(clearStatsWarning)

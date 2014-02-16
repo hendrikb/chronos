@@ -50,14 +50,19 @@ class Chronos:
         vim.command("vnew")
         curBuf = vim.current.buffer
         del curBuf[:]
-        curBuf[0] = "Chronos time stats:"
-        curBuf.append("Today:")
+        curBuf.append("")
+        curBuf.append("Chronos time stats")
+        curBuf.append("")
+        curBuf.append("Today")
         self.printStatsFor("today")
-        curBuf.append("This week:")
+        curBuf.append("")
+        curBuf.append("This week")
         self.printStatsFor("week")
-        curBuf.append("This month:")
+        curBuf.append("")
+        curBuf.append("This month")
         self.printStatsFor("month")
-        curBuf.append("All time:")
+        curBuf.append("")
+        curBuf.append("All time")
         self.printStatsFor("total")
 
     def startTimer(self):

@@ -12,22 +12,32 @@ def getExtension(fileName):
     else:
         return splits[1]
 
+class ChronosState:
+    def __init__(self):
+        self.month = date.today().month
+        self.day   = date.today().day
+        self.week  = date.today().isocalendar()[1]
+        self.statsDict = {"today": {}, "week": {}, "month": {}, "total": {}}
+
 class Chronos:
     def __init__(self):
         self.timerDict = {}
-        # FIXME: Duplication?
         try:
-            if os.path.isfile(".chronos"):
-                self.statsDict = pick.load(".chronos")
-            else:
-                self.statsDict = {"today": {}, "week": {}, "month": {}, "total": {}}
+            with open(".chronos", "r") as file:
+                self.state = pickle.load(file)
         except:
-            self.statsDict = {"today": {}, "week": {}, "month": {}, "total": {}}
-
+            print "New state"
+            self.state = ChronosState()
+        if self.state.month != date.today().month:
+            self.state.statsDict["month"].clear()
+        if self.state.day != date.today().day:
+            self.state.statsDict["today"].clear()
+        if self.state.week != date.today().isocalendar()[1]:
+            self.state.statsDict["week"].clear()
 
     def __del__(self):
         with open(".chronos", "w") as file:
-            pickle.dump(self.statsDict, file)
+            pickle.dump(self.state, file)
 
     def showStats(self):
         vim.command("vnew")
@@ -71,32 +81,16 @@ class Chronos:
         self.addToStats(curExt, elapsed)
 
     def addToStats(self, ext, elapsed):
-        weekNumber  = date.today().isocalendar()[1]
-        monthNumber = date.today().month
-        dayNumber   = date.today().day
-
-        # We don't want to keep old month/day/week around.
-        # FIXME: Don't store them in dicts but in object.
-        if dayNumber not in self.statsDict["today"]:
-            self.statsDict["today"].clear()
-            self.statsDict["today"][dayNumber] = None
-        if weekNumber not in self.statsDict["week"]:
-            self.statsDict["week"].clear()
-            # Ugly hack
-            self.statsDict["week"][weekNumber] = None
-        if monthNumber not in self.statsDict["month"]:
-            self.statsDict["month"].clear()
-            self.statsDict["month"][monthNumber] = None
 
         for when in ["today", "total", "week", "month"]:
-            if ext in self.statsDict[when]:
-                self.statsDict[when][ext] += elapsed
+            if ext in self.state.statsDict[when]:
+                self.state.statsDict[when][ext] += elapsed
             else:
-                self.statsDict[when][ext] = elapsed
+                self.state.statsDict[when][ext] = elapsed
 
     def printStatsFor(self, key):
         curBuf = vim.current.buffer
-        for (ext, time) in self.statsDict[key].iteritems():
+        for (ext, time) in self.state.statsDict[key].iteritems():
             curBuf.append("  %s" % ext)
             curBuf.append("    %s" % time)
 

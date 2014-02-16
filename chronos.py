@@ -47,8 +47,8 @@ class Chronos:
             pickle.dump(self.state, file)
 
     def showStats(self):
-        # TODO: Set buffer type so it doesn't need saving.
         vim.command("vnew")
+        vim.current.buffer.options["buftype"] = "nofile"
         curBuf = vim.current.buffer
         del curBuf[:]
         curBuf.append("")

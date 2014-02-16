@@ -9,11 +9,6 @@ clearStatsWarning = """Warning:
     be recoverable. If you really want to do this, run this
     command again."""
 
-inactivityWarning = """It looks like you may have been inactive for %s.
-    I took the liberty of not adding this timespan to your stats to refrain
-    from skewing them. If you want me to add this anyway, run :ChronosAddAnyway.
-    """
-
 def getExtension(fileName):
     splits = fileName.rsplit(".", 1)
     if len(splits) < 2:

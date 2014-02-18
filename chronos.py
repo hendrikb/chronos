@@ -9,15 +9,6 @@ clearStatsWarning = """Warning:
     be recoverable. If you really want to do this, run this
     command again."""
 
-def getExtension(fileName):
-    splits = fileName.rsplit(".", 1)
-    if len(splits) < 2:
-        return None
-    elif splits[0] == "":
-        return None
-    else:
-        return splits[1]
-
 def formatTimeDelta(delta):
     secs = delta.total_seconds()
     result = ""
@@ -106,7 +97,7 @@ class Chronos:
         if not curBuf:
             return
 
-        curExt = getExtension(curBuf)
+        curExt = os.path.splitext(curBuf)[1][1:]
         if not curExt:
             return
 

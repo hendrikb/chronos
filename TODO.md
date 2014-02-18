@@ -1,6 +1,9 @@
 # Todo list
 
+## Before release
   * Document code.
   * Make compatible with vundle structure.
-  * Possibly use filetype instead of extension?
   * Write readme.
+
+## Not necessarily before release
+  * Possibly use filetype instead of extension?

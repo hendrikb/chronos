@@ -1,7 +1,6 @@
 # Todo list
 
 ## Before release
-  * Document code.
   * Make compatible with vundle structure.
   * Write readme.
 

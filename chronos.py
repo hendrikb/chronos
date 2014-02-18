@@ -59,6 +59,12 @@ class Chronos:
             self.state.statsDict["today"].clear()
         if self.state.week != date.today().isocalendar()[1]:
             self.state.statsDict["week"].clear()
+        if "ChronosInactivityThreshold" in vim.vars:
+            self.inactivityThreshold = int(
+                vim.vars["ChronosInactivityThreshold"])
+        else:
+            vim.vars["ChronosInactivityThreshold"] = 10 * 60
+            self.inactivityThreshold = 10 * 60
 
     def __del__(self):
         with open(".chronos", "w") as file:
@@ -109,8 +115,7 @@ class Chronos:
         del self.timerDict[curBuf]
 
         elapsed = curTime - startTime
-        # TODO: Add configurable threshold.
-        if elapsed.total_seconds() >= 10 * 60:
+        if elapsed.total_seconds() >= self.inactivityThreshold:
             self.savedTimespan = (elapsed, curExt)
         else:
             self.addToStats(curExt, elapsed)

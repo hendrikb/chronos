@@ -34,6 +34,9 @@ def formatTimeDelta(delta):
         if q > 0:
             result += "%d%s " % (q, s)
         secs = secs % t
+    # Needed so we don't display an empty in the case of 0s.
+    if not result:
+        result = "0s"
     return result.rstrip()
 
 class ChronosState:

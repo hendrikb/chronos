@@ -3,8 +3,6 @@ if !has('python')
     finish
 endif
 
-let g:ChronosInactivityThreshold = 600
-
 pyfile chronos.py
 
 function! StartTimer()

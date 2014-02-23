@@ -22,7 +22,6 @@ def formatTimeDelta(delta):
 
     # A list of our time-unit suffixes and their durations in seconds.
     suffixes = [ ("y", 24 * 60 * 60 * 365)
-               , ("m", 24 * 60 * 60 * 30)
                , ("w", 24 * 60 * 60 * 7)
                , ("d", 24 * 60 * 60)
                , ("h", 60 * 60)

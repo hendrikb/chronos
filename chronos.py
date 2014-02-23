@@ -122,9 +122,10 @@ class Chronos:
         # this.
         vim.command("vnew")
         vim.current.buffer.options["buftype"] = "nofile"
+        vim.current.buffer.options["filetype"] = "chronos"
+        vim.command("syntax on")
         curBuf = vim.current.buffer
         del curBuf[:]
-        curBuf.append("")
         curBuf.append("Chronos time stats")
         curBuf.append("")
         curBuf.append("Today")

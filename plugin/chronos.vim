@@ -3,7 +3,7 @@ if !has('python')
     finish
 endif
 
-pyfile chronos.py
+execute 'pyfile ' . expand('<sfile>:p:h') . '/../chronos.py'
 
 function! StartTimer()
     py chronos.startTimer()
